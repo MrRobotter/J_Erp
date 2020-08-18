@@ -16,17 +16,17 @@ $("#loginName, #password").on("focus blur", function () {
 
 var loginName = localStorage.getItem("loginName");
 var password = localStorage.getItem("password");
-if(loginName){
+if (loginName) {
     $("#loginName").val(loginName);
-    setTimeout(function() {
+    setTimeout(function () {
         $("#rememberUserCode").parent().addClass("checked");
-    },200);
+    }, 200);
 }
-if(password){
+if (password) {
     $("#password").val(password);
-    setTimeout(function() {
+    setTimeout(function () {
         $("#rememberMe").parent().addClass("checked");
-    },200);
+    }, 200);
 }
 
 //初始化键盘enter事件
@@ -47,15 +47,16 @@ $('#btnSubmit').off("click").on("click", function () {
     var rememberMe = $("#rememberMe").parent().hasClass("checked");
     localStorage.removeItem("loginName");
     localStorage.removeItem("password");
-    if(rememberUserCode) {
-        localStorage.setItem("loginName",$("#loginName").val());
+    if (rememberUserCode) {
+        localStorage.setItem("loginName", $("#loginName").val());
     }
-    if(rememberMe) {
-        localStorage.setItem("loginName",$("#loginName").val());
-        localStorage.setItem("password",$("#password").val());
+    if (rememberMe) {
+        localStorage.setItem("loginName", $("#loginName").val());
+        localStorage.setItem("password", $("#password").val());
     }
     loginFun();
 });
+
 //检测用户输入数据
 function loginFun() {
     var loginName = $.trim($('#loginName').val());
@@ -77,23 +78,23 @@ function loginFun() {
             dataType: "json",
             data: ({
                 loginName: loginName,
-                password:  hex_md5(password)
+                password: hex_md5(password)
             }),
             success: function (res) {
-                if(res) {
+                if (res) {
                     var loginInfoTip = res.data.msgTip;
                     //用户名不存在，清空输入框并定位到用户名输入框
                     if (loginInfoTip.indexOf("user is not exist") != -1) {
                         $("#loginName").val("").focus();
                         $("#password").val("");
-                        alert("用户名不存在");
+                        // alert("用户名不存在");
+                        alert("用户名或密码错误!");
                         return;
-                    }
-                    else if (loginInfoTip.indexOf("user password error") != -1) {
-                        alert("密码错误");
+                    } else if (loginInfoTip.indexOf("user password error") != -1) {
+                        // alert("密码错误");
+                        alert("用户名或密码错误!");
                         return;
-                    }
-                    else if (loginInfoTip.indexOf("access service error") != -1) {
+                    } else if (loginInfoTip.indexOf("access service error") != -1) {
                         alert("后台访问错误");
                         return;
                     }
@@ -104,8 +105,8 @@ function loginFun() {
                             url: "/user/getUserSession",
                             dataType: "json",
                             success: function (res) {
-                                if(res && res.code === 200) {
-                                    if(res.data.user) {
+                                if (res && res.code === 200) {
+                                    if (res.data.user) {
                                         var user = res.data.user;
                                         sessionStorage.setItem("userId", user.id);
                                         sessionStorage.setItem("loginName", user.loginName);
